@@ -1,7 +1,7 @@
 name: Test Output
 
 on:
-  push:
+  pull_request:
 
 jobs:
   test:
@@ -11,3 +11,5 @@ jobs:
 
   example:
     uses: ohcnkk/temp/.github/workflows/reusable-workflow.yml@main
+    with:
+      username: ohcnkk
