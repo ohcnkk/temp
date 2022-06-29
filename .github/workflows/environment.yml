@@ -17,3 +17,5 @@ jobs:
         with:
           name: dev
           path: ${{ github.workspace }}
+      - name: Failure
+        run: exit 1

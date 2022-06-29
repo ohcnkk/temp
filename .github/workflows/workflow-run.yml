@@ -47,7 +47,11 @@ jobs:
         
       - name: Get the output of duration
         run: echo "The duration is ${{ steps.duration.outputs.duration }} seconds long."
-          
+
+      - name: Failure
+        if: github.event.workflow_run.conclusion != 'success'
+        run: exit 1
+
 #   sleep:
 #     needs: [run]
 #     runs-on: ubuntu-latest
