@@ -12,10 +12,19 @@ jobs:
     steps:
       - name: Run
         run: echo dev >> file
+
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: dev
           path: ${{ github.workspace }}
-      - name: Failure
+
+      - name: Failure Test
+        continue-on-error: true
         run: exit 1
+
+  reusable-workflow:
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      username: ${{ github.actor }}
+      extra_env: action_state=yellow,foo=bar

@@ -43,7 +43,6 @@ jobs:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       username: ${{ github.actor }}
-      extra_env: action_state=yellow,foo=bar
 
 #   fail:
 #     runs-on: ubuntu-latest
