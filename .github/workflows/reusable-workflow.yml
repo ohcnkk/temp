@@ -13,6 +13,13 @@ on:
 jobs:
   example_job:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        environment:
+          - dev
+          - test
+          - prod
     steps:
       - name: Extra ENV
         if: inputs.extra_env != null
@@ -23,6 +30,7 @@ jobs:
           echo "username: ${{ inputs.username }}"
           echo "IMAGE_TAG: ${IMAGE_TAG}"
           echo "GLOBAL_ENV: ${GLOBAL_ENV}"
+          echo "MATRIX: ${{ matrix.environment }}"
           export
         env:
           IMAGE_TAG: ${{ github.run_id }}.0${{ github.run_number }}.${{ github.run_attempt }}
