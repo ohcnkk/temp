@@ -1,0 +1,23 @@
+name: Helmv2
+
+on:
+  push:
+    branches:
+      - "helmv2"
+
+jobs:
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Helm
+        id: helm
+        uses: Azure/setup-helm@v3
+        with:
+          version: '2.17.0'
+
+      - name: Setup Tiller
+        run: |
+          which helm
+          helm init --client-only
+          helm plugin install https://github.com/rimusz/helm-tiller
+          helm tiller run helm version
