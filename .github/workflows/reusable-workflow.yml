@@ -6,14 +6,23 @@ on:
       username:
         required: true
         type: string
+      extra_env:
+        required: false
+        type: string
 
 jobs:
   example_job:
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: Extra ENV
+        if: inputs.extra_env != null
+        run: echo "${{ inputs.extra_env }}" | tr ',' '\n' >> $GITHUB_ENV
+
+      - name: Output ENV
+        run: |
           echo "username: ${{ inputs.username }}"
           echo "IMAGE_TAG: ${IMAGE_TAG}"
           echo "GLOBAL_ENV: ${GLOBAL_ENV}"
+          cat env
     env:
       IMAGE_TAG: ${{ github.run_id }}.0${{ github.run_number }}.${{ github.run_attempt }}
