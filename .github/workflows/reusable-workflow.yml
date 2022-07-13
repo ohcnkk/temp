@@ -9,17 +9,32 @@ on:
       extra_env:
         required: false
         type: string
+      matrix:
+        required: false
+        type: string
+        default: matrix
 
 jobs:
+  matrix-prep:
+    runs-on: ubuntu-latest
+    outputs:
+      matrices: ${{ steps.tests.outputs.matrices }}
+    steps:
+      - id: tests
+        run: |
+          matrix=${{ github.event.inputs.matrix }}
+          matrices=$(echo $matrix | jq -R 'split(",") | '.'' | jq -c)
+          echo ::set-output name=matrices::$matrices
+      - run: echo ${{ steps.tests.outputs.matrices }}
+
   example_job:
     runs-on: ubuntu-latest
+    needs:
+      - matrix-prep
     strategy:
       fail-fast: false
       matrix:
-        environment:
-          - dev
-          - test
-          - prod
+        environment: ${{ fromJson(needs.matrix-prep.outputs.matrices) }}
     steps:
       - name: Extra ENV
         if: inputs.extra_env != null

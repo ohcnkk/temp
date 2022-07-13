@@ -28,3 +28,4 @@ jobs:
     with:
       username: ${{ github.actor }}
       extra_env: action_state=yellow,foo=bar
+      matrix: 'dev,test'
