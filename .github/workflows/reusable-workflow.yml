@@ -14,5 +14,6 @@ jobs:
       - run: |
           echo "username: ${{ inputs.username }}"
           echo "IMAGE_TAG: ${IMAGE_TAG}"
+          echo "GLOBAL_ENV: ${GLOBAL_ENV}"
     env:
       IMAGE_TAG: ${{ github.run_id }}.0${{ github.run_number }}.${{ github.run_attempt }}
