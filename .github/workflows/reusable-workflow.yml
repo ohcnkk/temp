@@ -22,8 +22,10 @@ jobs:
     steps:
       - id: tests
         run: |
-          matrix=${{ github.event.inputs.matrix }}
-          matrices=$(echo $matrix | jq -R 'split(",") | '.'' | jq -c)
+          export matrix=${{ inputs.matrix }}
+          echo "matrix: ${matrix}"
+          export matrices=$(echo $matrix | jq -R 'split(",") | '.'' | jq -c)
+          echo "matrices: ${matrices}"
           echo ::set-output name=matrices::$matrices
       - run: echo ${{ steps.tests.outputs.matrices }}
 
