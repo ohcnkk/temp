@@ -29,3 +29,4 @@ jobs:
       username: ${{ github.actor }}
       extra_env: action_state=yellow,foo=bar
       matrix: 'dev,test'
+      file: nonreadme.txt

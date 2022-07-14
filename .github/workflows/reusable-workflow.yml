@@ -13,6 +13,9 @@ on:
         required: false
         type: string
         default: matrix
+      read_file:
+        required: false
+        type: string
 
 jobs:
   matrix-prep:
@@ -51,3 +54,8 @@ jobs:
           export
         env:
           IMAGE_TAG: ${{ github.run_id }}.0${{ github.run_number }}.${{ github.run_attempt }}
+
+      - name: Read File
+        run: |
+          echo "test" > ${{ inputs.file }}
+          cat ${{ inputs.file != null && inputs.file || 'README.md' }}
