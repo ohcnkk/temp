@@ -3,7 +3,7 @@ name: Helmv2
 on:
   push:
     branches:
-      - "helmv2"
+      - "feature/helmv2"
 
 jobs:
   helm:
