@@ -57,5 +57,5 @@ jobs:
 
       - name: Read File
         run: |
-          echo "test" > ${{ inputs.file }}
+          echo "\nTest Condition\n" >> ${{ inputs.file != null && inputs.file || 'README.md' }}
           cat ${{ inputs.file != null && inputs.file || 'README.md' }}
