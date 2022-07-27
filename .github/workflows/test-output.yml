@@ -3,7 +3,8 @@ name: Test Output
 on:
   push:
     branches: 
-    - main
+      - main
+      - develop
 
 env:
   GLOBAL_ENV: global_env_test
