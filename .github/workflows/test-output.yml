@@ -3,7 +3,8 @@ name: Test Output
 on:
   push:
     branches: 
-    - main
+      - main
+      - develop
 
 env:
   GLOBAL_ENV: global_env_test
@@ -43,6 +44,14 @@ jobs:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       username: ${{ github.actor }}
+   
+  dump-gh-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
 #   fail:
 #     runs-on: ubuntu-latest
