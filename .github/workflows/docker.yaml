@@ -16,21 +16,17 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-build-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-build
+          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Dockerfile') }}
       - name: Build Image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: ./
+          file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: false
           load: true
+          tags: temp:latest
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
-      # Temp fix https://github.com/docker/build-push-action/issues/252 https://github.com/moby/buildkit/issues/1896
-      - name: Move cache
-        run: |
-          docker images
-          rm -rf /tmp/.buildx-cache        
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Images
+        run: docker images
