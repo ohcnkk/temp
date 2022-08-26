@@ -85,9 +85,15 @@ jobs:
       #       const url = 'https://httpbin.org/get'
       #       const result = await github.request(url)
       #       console.log(result)
-      - uses: actions/checkout@v2
       - uses: actions/github-script@v6
         with:
           script: |
-            const script = require('./.github/scripts/script.js')
-            console.log(script)
+            const request = require('request');
+            const options = {
+              method: 'POST',
+              url: 'https://httpbin.org/post',
+            };
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+              console.log(body);
+            });
