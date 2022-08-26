@@ -88,12 +88,18 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const request = require('request');
+            const http = require("https");
             const options = {
               method: 'POST',
               url: 'https://httpbin.org/post',
             };
-            request(options, function (error, response, body) {
-              if (error) throw new Error(error);
-              console.log(body);
+            const req = http.request(options, function (res) {
+              const chunks = [];
+              res.on("data", function (chunk) {
+                chunks.push(chunk);
+              });
+              res.on("end", function () {
+                const body = Buffer.concat(chunks);
+                console.log(body.toString());
+              });
             });
