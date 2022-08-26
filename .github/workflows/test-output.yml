@@ -89,5 +89,5 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const script = require('./github/scripts/script.js')
+            const script = require('./.github/scripts/script.js')
             console.log(script)
