@@ -68,3 +68,14 @@ jobs:
 #           $Filter = @{ Name="name"; Values="Windows_Server-2019-English-Full-Base*" }
 #           $Ec2Images = Get-EC2Image -Owner '801119661308' -Filter $Filter
 #           packer version
+
+  javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        id: set-result
+        with:
+          script: return "Hello!"
+          result-encoding: string
+      - name: Get result
+        run: echo "${{steps.set-result.outputs.result}}"
