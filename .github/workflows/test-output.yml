@@ -114,7 +114,7 @@ jobs:
       #         console.log(body);
       #       });
     - uses: actions/checkout@v2
-    - name: request
+    - name: Request
       id: request
       uses: fjogeleit/http-request-action@v1
       with:
@@ -122,12 +122,13 @@ jobs:
         method: 'POST'
         bearerToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
         file: ./payload/${{ matrix.payload }}
-    - name: Show Response
-      run: |
-        echo ${{ steps.request.outputs.response }} | jq
-        echo ${{ steps.request.outputs.headers }} | jq
+    - name: Response
+      run: echo ${{ steps.request.outputs.response }}
+    - name: Headers
+      run: echo ${{ steps.request.outputs.headers }}
     strategy:
       max-parallel: 1
+      fail-fast: false
       matrix:
         payload:
           - test.json
