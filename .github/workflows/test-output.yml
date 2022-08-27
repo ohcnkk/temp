@@ -69,7 +69,7 @@ jobs:
 #           $Ec2Images = Get-EC2Image -Owner '801119661308' -Filter $Filter
 #           packer version
 
-  javascript:
+  request:
     runs-on: ubuntu-latest
     steps:
       # - uses: actions/github-script@v6
@@ -85,31 +85,44 @@ jobs:
       #       const url = 'https://httpbin.org/get'
       #       const result = await github.request(url)
       #       console.log(result)
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - run: npm install request
-      - uses: actions/github-script@v6
-        with:
-          script: |
-            const request = require('request');
-            const fs = require('fs');
+      # - uses: actions/checkout@v2
+      # - uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 14
+      # - run: npm install request
+      # - uses: actions/github-script@v6
+      #   with:
+      #     script: |
+      #       const request = require('request');
+      #       const fs = require('fs');
 
-            let payload = fs.readFileSync('./payload/test.json');
-            let body = JSON.parse(payload);
-            console.log(body);
+      #       let payload = fs.readFileSync('./payload/test.json');
+      #       let body = JSON.parse(payload);
+      #       console.log(body);
 
-            const options = {
-              method: 'POST',
-              url: 'https://httpbin.org/post',
-              headers: {'content-type': 'application/json'},
-              body: body,
-              json: true
-            };
+      #       const options = {
+      #         method: 'POST',
+      #         url: 'https://httpbin.org/post',
+      #         headers: {'content-type': 'application/json'},
+      #         body: body,
+      #         json: true
+      #       };
 
-            request(options, function (error, response, body) {
-              if (error) throw new Error(error);
-              console.log(response.statusCode);
-              console.log(body);
-            });
+      #       request(options, function (error, response, body) {
+      #         if (error) throw new Error(error);
+      #         console.log(response.statusCode);
+      #         console.log(body);
+      #       });
+    - uses: actions/checkout@v2
+    - name: request
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: 'https://httpbin.org/post'
+        methold: 'POST'
+        bearerToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        file: ./payload/${{ matrix.payload }}
+    strategy:
+      matrix:
+        payload:
+          - test.json
+      
