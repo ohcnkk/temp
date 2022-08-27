@@ -88,7 +88,8 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const result = await github.request("GET", {
+            const result = await github.request({
+                method: "GET",
                 baseUrl: "https://httpbin.org/get"
-            })
+            });
             console.log(result)
