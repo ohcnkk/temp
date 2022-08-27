@@ -10,8 +10,6 @@ async function realVersion() {
     console.log(res.message.statusCode)
 }
 
-realVersion()
-
 module.exports = () => {
-    return res.message.statusCode
+    return realVersion()
 }
