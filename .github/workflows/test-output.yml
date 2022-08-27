@@ -85,8 +85,13 @@ jobs:
       #       const url = 'https://httpbin.org/get'
       #       const result = await github.request(url)
       #       console.log(result)
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
       - uses: actions/github-script@v6
         with:
           script: |
-            const result = await github.request('https://httpbin.org/get')
-            console.log(result)
+            const script = require('./.github/scripts/script.js')
+            console.log(script())
