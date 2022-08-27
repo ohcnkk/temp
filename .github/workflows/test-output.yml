@@ -104,7 +104,7 @@ jobs:
               method: 'POST',
               url: 'https://httpbin.org/post',
               headers: {'content-type': 'application/json'},
-              body: {foo: 'baz'},
+              body: body,
               json: true
             };
 
