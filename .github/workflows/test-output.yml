@@ -88,8 +88,6 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const jsonObj = await http.postJson<any>(
-              'https://httpbin.org/post',
-              {}
-            )
-            console.log(jsonObj)
+            const request = require('@octokit/request')
+            const result = await request('https://httpbin.org/get')
+            console.log(result)
