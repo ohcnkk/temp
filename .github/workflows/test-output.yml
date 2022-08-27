@@ -10,48 +10,48 @@ env:
   GLOBAL_ENV: global_env_test
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "main workflow"
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: echo "main workflow"
       
-  workspace:
-    runs-on: ubuntu-latest
-    steps:
-      - run: mkdir newdir && touch newdir/newfile
-      - run: |
-          echo "NEW_DIR is $NEW_DIR"
-          ls -ltr $NEW_DIR
-          echo $BUILD >> $NEW_DIR/newfile
-          cat $NEW_DIR/newfile
-        env:
-          NEW_DIR: ${{ github.workspace }}/newdir
-          BUILD: ${{ github.sha }}
+  # workspace:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: mkdir newdir && touch newdir/newfile
+  #     - run: |
+  #         echo "NEW_DIR is $NEW_DIR"
+  #         ls -ltr $NEW_DIR
+  #         echo $BUILD >> $NEW_DIR/newfile
+  #         cat $NEW_DIR/newfile
+  #       env:
+  #         NEW_DIR: ${{ github.workspace }}/newdir
+  #         BUILD: ${{ github.sha }}
 
-  anotations:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        container: [ foo, bar ]
-    steps:
-      - run: echo "::notice::$IMAGE:$TAG"
-        env:
-          IMAGE: ${{ matrix.container }}
-          TAG: latest
+  # anotations:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       container: [ foo, bar ]
+  #   steps:
+  #     - run: echo "::notice::$IMAGE:$TAG"
+  #       env:
+  #         IMAGE: ${{ matrix.container }}
+  #         TAG: latest
           
-  reusable-workflow:
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      username: ${{ github.actor }}
+  # reusable-workflow:
+  #   uses: ./.github/workflows/reusable-workflow.yml
+  #   with:
+  #     username: ${{ github.actor }}
    
-  dump-gh-context:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+  # dump-gh-context:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Dump GitHub context
+  #       env:
+  #         GITHUB_CONTEXT: ${{ toJson(github) }}
+  #       run: echo "$GITHUB_CONTEXT"
 
 #   fail:
 #     runs-on: ubuntu-latest
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm ci
+      - run: npm install @actions/http-client
       - uses: actions/github-script@v6
         with:
           script: |
