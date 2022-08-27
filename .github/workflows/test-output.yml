@@ -88,6 +88,8 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const request = require('@octokit/request')
-            const result = await request('https://httpbin.org/get')
-            console.log(result)
+            const result = github.request.defaults({
+                baseUrl: "https://httpbin.org/get"
+            });
+            const response = await result(`GET`)
+            console.log(response)
