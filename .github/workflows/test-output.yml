@@ -123,7 +123,7 @@ jobs:
         bearerToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
         file: ./payload/${{ matrix.payload }}
     - name: Response
-      run: echo ${{ fromJson(steps.myRequest.outputs.response) }}
+      run: echo ${{ fromJson(steps.request.outputs.response) }}
     strategy:
       max-parallel: 1
       fail-fast: false
