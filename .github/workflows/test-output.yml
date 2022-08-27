@@ -89,9 +89,22 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm install @actions/http-client
+      - run: npm install request
       - uses: actions/github-script@v6
         with:
           script: |
-            const script = require('./.github/scripts/script.js')
-            console.log(script())
+            const request = require('request');
+
+            const options = {
+              method: 'POST',
+              url: 'https://httpbin.org/post',
+              headers: {'content-type': 'application/json'},
+              body: {foo: 'baz'},
+              json: true
+            };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
