@@ -124,10 +124,12 @@ jobs:
         file: ./payload/${{ matrix.payload }}
     - name: Show Response
       run: |
-        echo ${{ steps.request.outputs.response }}
-        echo ${{ steps.request.outputs.headers }}
+        echo ${{ steps.request.outputs.response }} | jq
+        echo ${{ steps.request.outputs.headers }} | jq
     strategy:
+      max-parallel: 1
       matrix:
         payload:
           - test.json
+          - foo.json
       
