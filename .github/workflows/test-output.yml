@@ -13,8 +13,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: echo "main workflow"
-      
+      - run: |
+          if grep -q "Bad Gateway" go; 
+          then
+            exit 1
+          fi
+
   workspace:
     runs-on: ubuntu-latest
     steps:
