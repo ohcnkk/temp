@@ -16,6 +16,14 @@ jobs:
       - uses: actions/checkout@v3
       - run: echo "main workflow"
       - run: |
+          set -x
+          err_rate='20'
+          totalerrorpercentage=${err_rate%.*}
+          echo "totalerrorpercentage: $totalerrorpercentage"
+          if (( $totalerrorpercentage > 50 ));
+          then
+              exit 1
+          fi
           if grep -q "Bad Gateway" go; 
           then
             exit 1
