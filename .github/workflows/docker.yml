@@ -17,5 +17,6 @@ jobs:
         with:
           json: "true"
           dir_names: "true"
+          fetch-depth: 0
 
       - run: echo "${{ steps.changed-files.outputs }}"
