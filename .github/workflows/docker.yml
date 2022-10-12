@@ -1,0 +1,22 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - "multi-docker-files"
+    paths:
+      - "docker/**"
+
+jobs:
+  prepare-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - id: changed-files
+        uses: tj-actions/changed-files@v32
+        with:
+          json: "true"
+          dir_names: "true"
+          fetch-depth: 0
+          path: docker
+
+      - run: echo "${{ steps.changed-files.outputs }}"
