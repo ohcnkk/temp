@@ -6,7 +6,6 @@ on:
       - "multi-docker-files"
     paths:
       - "docker/**"
-      - ".github/workflows/docker.yml"
 
 jobs:
   prepare-matrix:
@@ -21,6 +20,5 @@ jobs:
         with:
           json: "true"
           dir_names: "true"
-          path: docker
 
-      - run: echo "${{ toJson(steps.changed-files.outputs) }}"
+      - run: echo "${{ steps.changed-files.outputs.all_changed_files }}"
