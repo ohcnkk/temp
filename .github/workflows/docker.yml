@@ -12,11 +12,14 @@ jobs:
   prepare-matrix:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - id: changed-files
         uses: tj-actions/changed-files@v32
         with:
           json: "true"
           dir_names: "true"
-          fetch-depth: 0
 
       - run: echo "${{ steps.changed-files.outputs }}"
