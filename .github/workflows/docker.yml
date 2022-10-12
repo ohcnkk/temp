@@ -17,6 +17,5 @@ jobs:
         with:
           json: "true"
           dir_names: "true"
-          path: docker
 
       - run: echo "${{ steps.changed-files.outputs }}"
