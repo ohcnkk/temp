@@ -6,6 +6,7 @@ on:
       - "multi-docker-files"
     paths:
       - "docker/**"
+      - ".github/workflows/docker.yml"
 
 jobs:
   prepare-matrix:
