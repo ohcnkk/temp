@@ -11,7 +11,7 @@ jobs:
   matrix:
     runs-on: ubuntu-latest
     outputs:
-      changes: ${{ steps.changed-files.outputs.all_changed_files }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
       any_changed: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +27,9 @@ jobs:
 
       - run: echo "${{ steps.changed-files.outputs.all_changed_files }}"
 
+      - id: set-matrix
+        run: echo "::set-output name=matrix::{\"container\":${{ steps.changed-files.outputs.all_changed_files }}}"
+
       - run: echo "${{ toJson(steps.changed-files.outputs) }}"
 
   build:
@@ -37,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        docker: ${{ fromJson(needs.matrix.outputs.changes) }}
+        docker: ${{ fromJSON(needs.matrix.outputs.changes) }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
