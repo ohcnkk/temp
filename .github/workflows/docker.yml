@@ -6,6 +6,7 @@ on:
       - "multi-docker-files"
     paths:
       - "docker/**"
+      - ".github/workflows/docker.yml"
 
 jobs:
   matrix:
@@ -50,6 +51,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v2
@@ -61,20 +65,33 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.docker }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-${{ matrix.docker }}-
 
-      # - name: Login to DockerHub
-      #   uses: docker/login-action@v1
-      #   with:
-      #     username: ${{ secrets.DOCKER_USER }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-southeast-2
+
+      - name: Login ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Image Metadata
+        id: meta
+        run: |
+          repository=$(echo ${{ matrix.docker }} | awk '{split($0,array,"/"); print array[2]}')
+          tag=$(echo ${{ matrix.docker }} | awk '{split($0,array,"/"); print array[3]}')
+          echo "::set-output name=repository::$repository"
+          echo "::set-output name=tag::$tag"
 
       - name: Build Image
         uses: docker/build-push-action@v3
         with:
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ steps.meta.outputs.repository }}:${{ steps.meta.outputs.tag }}
           context: ${{ matrix.docker }}
           file: ${{ matrix.docker }}/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
-          push: false
-          load: true
+          push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
