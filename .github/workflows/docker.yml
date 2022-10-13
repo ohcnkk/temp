@@ -8,8 +8,10 @@ on:
       - "docker/**"
 
 jobs:
-  prepare-matrix:
+  matrix:
     runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.changed-files.outputs.all_changed_files }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -20,5 +22,53 @@ jobs:
         with:
           json: "true"
           dir_names: "true"
+          files: docker/**
 
       - run: echo "${{ steps.changed-files.outputs.all_changed_files }}"
+
+  build:
+    if: needs.matrix.outputs.any_changed == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        docker: ${{ fromJson(needs.matrix.outputs.changes) }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-${{ matrix.docker }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-${{ matrix.docker }}-
+
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKER_USER }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Image
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ matrix.docker }}
+          file: ${{ matrix.docker }}/Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: false
+          load: true
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      # Temp fix https://github.com/docker/build-push-action/issues/252 https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
