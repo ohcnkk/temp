@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        docker: ${{ fromJson(needs.matrix.outputs.changes) }}
+        docker: ${{ fromJson(needs.matrix.outputs.matrix) }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
