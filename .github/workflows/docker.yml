@@ -28,9 +28,14 @@ jobs:
       - run: echo "${{ steps.changed-files.outputs.all_changed_files }}"
 
       - id: set-matrix
-        run: echo "::set-output name=matrix::${{ steps.changed-files.outputs.all_changed_files }}"
+        run: |
+          changes=${{ steps.changed-files.outputs.all_changed_files }}
+          change_dirs=$(echo "$changes" | jq -c)
+          echo "::set-output name=matrix::$change_dirs"
 
-      - run: echo "${{ toJson(steps.changed-files.outputs) }}"
+      - run: |
+          echo "${{ steps.set-matrix.outputs.matrix }}"
+          echo "${{ toJson(steps.changed-files.outputs) }}"
 
   build:
     if: needs.matrix.outputs.any_changed == 'true'
