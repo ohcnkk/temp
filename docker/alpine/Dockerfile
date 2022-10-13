@@ -1,4 +1,4 @@
-FROM alpiine
+FROM alpine
 
 RUN apk upgrade
 COPY . /app
