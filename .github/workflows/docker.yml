@@ -21,20 +21,16 @@ jobs:
       - id: changed-files
         uses: tj-actions/changed-files@v32
         with:
+          json: "true"
           dir_names: "true"
           files: docker/**
-          separator: ','
+
+      - run: echo "${{ steps.changed-files.outputs.all_changed_files }}"
 
       - id: set-matrix
-        run: |
-          echo "${{ steps.changed-files.outputs.all_changed_files }}"
-          changes=$${{ steps.changed-files.outputs.all_changed_files }}
-          change_dirs=$(echo $changes | jq -R 'split(",") | '.'' | jq -c)
-          echo "::set-output name=matrix::$change_dirs"
+        run: echo "::set-output name=matrix::${{ steps.changed-files.outputs.all_changed_files }}"
 
-      - run: |
-          echo "${{ steps.set-matrix.outputs.matrix }}"
-          echo "${{ toJson(steps.changed-files.outputs) }}"
+      - run: echo "${{ toJson(steps.changed-files.outputs) }}"
 
   build:
     if: needs.matrix.outputs.any_changed == 'true'
@@ -44,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        docker: ${{ fromJSON(needs.matrix.outputs.changes) }}
+        docker: ${{ fromJson(needs.matrix.outputs.changes) }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
