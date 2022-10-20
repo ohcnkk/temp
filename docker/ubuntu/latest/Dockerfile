@@ -1,4 +1,4 @@
 FROM ubuntu
 
 RUN apt-get update
-COPY . /app
+# COPY . /app
