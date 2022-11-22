@@ -3,7 +3,7 @@ name: Docker
 on:
   push:
     branches:
-      - main
+      - docker-compose
       
 jobs:
   build:
@@ -11,24 +11,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@master
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-buildx-
-      - name: Build Image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          builder: ${{ steps.buildx.outputs.name }}
-          push: false
-          load: true
-          tags: temp:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-      - name: Images
-        run: docker images
+
+      - name: Docker Compose Up
+        run: |
+          docker compose -h
+          docker compose up -h
